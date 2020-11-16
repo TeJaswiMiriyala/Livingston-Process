@@ -1,0 +1,496 @@
+<Activity mc:Ignorable="sap sap2010" x:Class="CA_CreateHierarchyAndRunMacros" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:av="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib" xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=mscorlib" xmlns:sd="clr-namespace:System.Data;assembly=System.Data" xmlns:ui="http://schemas.uipath.com/workflow/activities" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <x:Members>
+    <x:Property Name="in_Config" Type="InArgument(scg:Dictionary(x:String, x:Object))" />
+    <x:Property Name="io_TransactionItem" Type="InArgument(sd:DataRow)" />
+    <x:Property Name="in_SummaryInvoiceNo" Type="InArgument(x:String)" />
+    <x:Property Name="out_WeeklySummFolderPath" Type="OutArgument(x:String)" />
+    <x:Property Name="out_EmailsFolderPath" Type="OutArgument(x:String)" />
+    <x:Property Name="out_EntryDocsFolderPath" Type="OutArgument(x:String)" />
+    <x:Property Name="out_WeeklySummFolderName" Type="OutArgument(x:String)" />
+    <x:Property Name="out_CurrentDate" Type="OutArgument(x:String)" />
+    <x:Property Name="out_AccountFolder" Type="OutArgument(x:String)" />
+    <x:Property Name="in_TimeStamp" Type="InArgument(x:String)" />
+  </x:Members>
+  <mva:VisualBasic.Settings>
+    <x:Null />
+  </mva:VisualBasic.Settings>
+  <sap:VirtualizedContainerService.HintSize>1488,1503</sap:VirtualizedContainerService.HintSize>
+  <sap2010:WorkflowViewState.IdRef>ActivityBuilder_1</sap2010:WorkflowViewState.IdRef>
+  <TextExpression.NamespacesForImplementation>
+    <sco:Collection x:TypeArguments="x:String">
+      <x:String>System.Activities</x:String>
+      <x:String>System.Activities.Statements</x:String>
+      <x:String>System.Activities.Expressions</x:String>
+      <x:String>System.Activities.Validation</x:String>
+      <x:String>System.Activities.XamlIntegration</x:String>
+      <x:String>Microsoft.VisualBasic</x:String>
+      <x:String>Microsoft.VisualBasic.Activities</x:String>
+      <x:String>System</x:String>
+      <x:String>System.Collections</x:String>
+      <x:String>System.Collections.Generic</x:String>
+      <x:String>System.Data</x:String>
+      <x:String>System.Diagnostics</x:String>
+      <x:String>System.Drawing</x:String>
+      <x:String>System.IO</x:String>
+      <x:String>System.Linq</x:String>
+      <x:String>System.Net.Mail</x:String>
+      <x:String>System.Xml</x:String>
+      <x:String>System.Xml.Linq</x:String>
+      <x:String>System.Windows.Markup</x:String>
+      <x:String>UiPath.Core</x:String>
+      <x:String>UiPath.Core.Activities</x:String>
+    </sco:Collection>
+  </TextExpression.NamespacesForImplementation>
+  <TextExpression.ReferencesForImplementation>
+    <sco:Collection x:TypeArguments="AssemblyReference">
+      <AssemblyReference>System.Activities</AssemblyReference>
+      <AssemblyReference>Microsoft.VisualBasic</AssemblyReference>
+      <AssemblyReference>mscorlib</AssemblyReference>
+      <AssemblyReference>System.Data</AssemblyReference>
+      <AssemblyReference>System.Data.DataSetExtensions</AssemblyReference>
+      <AssemblyReference>System</AssemblyReference>
+      <AssemblyReference>System.Drawing</AssemblyReference>
+      <AssemblyReference>System.Core</AssemblyReference>
+      <AssemblyReference>System.Xml</AssemblyReference>
+      <AssemblyReference>System.Xml.Linq</AssemblyReference>
+      <AssemblyReference>PresentationFramework</AssemblyReference>
+      <AssemblyReference>WindowsBase</AssemblyReference>
+      <AssemblyReference>PresentationCore</AssemblyReference>
+      <AssemblyReference>System.Xaml</AssemblyReference>
+      <AssemblyReference>UiPath.System.Activities</AssemblyReference>
+      <AssemblyReference>UiPath.UiAutomation.Activities</AssemblyReference>
+      <AssemblyReference>System.ServiceModel</AssemblyReference>
+      <AssemblyReference>UiPath.Excel</AssemblyReference>
+      <AssemblyReference>UiPath.Mail</AssemblyReference>
+      <AssemblyReference>System.ComponentModel.Composition</AssemblyReference>
+      <AssemblyReference>System.ValueTuple</AssemblyReference>
+    </sco:Collection>
+  </TextExpression.ReferencesForImplementation>
+  <Flowchart DisplayName="CA_CreateHierarchyAndRunMacros" sap:VirtualizedContainerService.HintSize="1498,1384" sap2010:WorkflowViewState.IdRef="Flowchart_1">
+    <Flowchart.Variables>
+      <Variable x:TypeArguments="x:Boolean" Name="RootFolderExists" />
+      <Variable x:TypeArguments="x:Boolean" Name="AccountFolderExists" />
+      <Variable x:TypeArguments="x:Boolean" Name="YearFolderExists" />
+      <Variable x:TypeArguments="x:String" Name="CurrentYear" />
+      <Variable x:TypeArguments="x:Boolean" Name="WeeklySummaryFolderExists" />
+    </Flowchart.Variables>
+    <sap:WorkflowViewStateService.ViewState>
+      <scg:Dictionary x:TypeArguments="x:String, x:Object">
+        <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+        <av:Point x:Key="ShapeLocation">310,0</av:Point>
+        <av:Size x:Key="ShapeSize">60,75</av:Size>
+        <av:PointCollection x:Key="ConnectorLocation">340,75 340,104.5</av:PointCollection>
+        <x:Double x:Key="Width">1464</x:Double>
+        <x:Double x:Key="Height">1348.5</x:Double>
+      </scg:Dictionary>
+    </sap:WorkflowViewStateService.ViewState>
+    <Flowchart.StartNode>
+      <x:Reference>__ReferenceID12</x:Reference>
+    </Flowchart.StartNode>
+    <FlowStep x:Name="__ReferenceID12">
+      <sap:WorkflowViewStateService.ViewState>
+        <scg:Dictionary x:TypeArguments="x:String, x:Object">
+          <av:Point x:Key="ShapeLocation">240,104.5</av:Point>
+          <av:Size x:Key="ShapeSize">200,112</av:Size>
+          <av:PointCollection x:Key="ConnectorLocation">340,216.5 340,246.5 336.5,246.5 336.5,256.5</av:PointCollection>
+        </scg:Dictionary>
+      </sap:WorkflowViewStateService.ViewState>
+      <Sequence sap2010:Annotation.AnnotationText="Checking the Livingston Root Folder Path Present" DisplayName="Livingston Root Folder present? " sap:VirtualizedContainerService.HintSize="200,112" sap2010:WorkflowViewState.IdRef="Sequence_1">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+        <ui:PathExists DisplayName="Path Exists" Exists="[RootFolderExists]" sap:VirtualizedContainerService.HintSize="334,90" sap2010:WorkflowViewState.IdRef="PathExists_1" Path="[in_Config(&quot;LivingstonSitePath&quot;).ToString]" PathType="Folder" />
+      </Sequence>
+      <FlowStep.Next>
+        <FlowDecision x:Name="__ReferenceID3" sap2010:Annotation.AnnotationText="Checking if the Livingston Folder Site is accessible" Condition="[RootFolderExists]" DisplayName="Livingston site accessible?" sap:VirtualizedContainerService.HintSize="156,147" sap2010:WorkflowViewState.IdRef="FlowDecision_1">
+          <sap:WorkflowViewStateService.ViewState>
+            <scg:Dictionary x:TypeArguments="x:String, x:Object">
+              <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+              <av:Point x:Key="ShapeLocation">258.5,256.5</av:Point>
+              <av:Size x:Key="ShapeSize">156,147</av:Size>
+              <av:PointCollection x:Key="FalseConnector">414.5,330 950,330 950,354.5</av:PointCollection>
+              <av:PointCollection x:Key="TrueConnector">258.5,330 130,330 130,424.5</av:PointCollection>
+              <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+            </scg:Dictionary>
+          </sap:WorkflowViewStateService.ViewState>
+          <FlowDecision.True>
+            <FlowStep x:Name="__ReferenceID5">
+              <sap:WorkflowViewStateService.ViewState>
+                <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                  <av:Point x:Key="ShapeLocation">30,424.5</av:Point>
+                  <av:Size x:Key="ShapeSize">200,112</av:Size>
+                  <av:PointCollection x:Key="ConnectorLocation">130,536.5 130,566.5 258.5,566.5 258.5,516.5 362,516.5 362,546.5</av:PointCollection>
+                </scg:Dictionary>
+              </sap:WorkflowViewStateService.ViewState>
+              <Sequence sap2010:Annotation.AnnotationText="Checking if the Livingston Root Folder is Accessible" DisplayName="Account Folder present?" sap:VirtualizedContainerService.HintSize="200,112" sap2010:WorkflowViewState.IdRef="Sequence_2">
+                <sap:WorkflowViewStateService.ViewState>
+                  <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                    <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                    <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+                  </scg:Dictionary>
+                </sap:WorkflowViewStateService.ViewState>
+                <ui:LogMessage DisplayName="Log Display Livingston Site Accessible" sap:VirtualizedContainerService.HintSize="334,52" sap2010:WorkflowViewState.IdRef="LogMessage_3" Level="Info" Message="[in_Config(&quot;LogMessage_LivingstonSite Accessible&quot;).ToString+&quot; &quot;+in_TimeStamp]">
+                  <sap:WorkflowViewStateService.ViewState>
+                    <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                      <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+                      <x:Boolean x:Key="IsPinned">False</x:Boolean>
+                    </scg:Dictionary>
+                  </sap:WorkflowViewStateService.ViewState>
+                </ui:LogMessage>
+                <ui:PathExists DisplayName="Path Exists of LivingstonSite" Exists="[AccountFolderExists]" sap:VirtualizedContainerService.HintSize="334,90" sap2010:WorkflowViewState.IdRef="PathExists_2" Path="[in_Config(&quot;LivingstonSitePath&quot;).ToString+io_TransactionItem(0).ToString+&quot;\&quot;]" PathType="File">
+                  <sap:WorkflowViewStateService.ViewState>
+                    <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                      <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                    </scg:Dictionary>
+                  </sap:WorkflowViewStateService.ViewState>
+                </ui:PathExists>
+              </Sequence>
+              <FlowStep.Next>
+                <FlowDecision x:Name="__ReferenceID4" sap2010:Annotation.AnnotationText="Checking if the Livingston Root Site Path Exsists " Condition="[AccountFolderExists]" DisplayName="Account Folder exists?" sap:VirtualizedContainerService.HintSize="147,147" sap2010:WorkflowViewState.IdRef="FlowDecision_2">
+                  <sap:WorkflowViewStateService.ViewState>
+                    <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                      <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                      <av:Point x:Key="ShapeLocation">288.5,546.5</av:Point>
+                      <av:Size x:Key="ShapeSize">147,147</av:Size>
+                      <av:PointCollection x:Key="TrueConnector">288.5,620 170,620 170,684.02</av:PointCollection>
+                      <av:PointCollection x:Key="FalseConnector">435.5,620 570,620 570,689</av:PointCollection>
+                      <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+                    </scg:Dictionary>
+                  </sap:WorkflowViewStateService.ViewState>
+                  <FlowDecision.True>
+                    <FlowStep x:Name="__ReferenceID2">
+                      <sap:WorkflowViewStateService.ViewState>
+                        <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                          <av:Point x:Key="ShapeLocation">70,684.02</av:Point>
+                          <av:Size x:Key="ShapeSize">200,112</av:Size>
+                          <av:PointCollection x:Key="ConnectorLocation">170,796.02 170,826.02 424,826.02 424,826.5</av:PointCollection>
+                        </scg:Dictionary>
+                      </sap:WorkflowViewStateService.ViewState>
+                      <Sequence sap2010:Annotation.AnnotationText="Checking if the Current Year Folder is Found" DisplayName="Year Folder Exists?" sap:VirtualizedContainerService.HintSize="200,112" sap2010:WorkflowViewState.IdRef="Sequence_3">
+                        <sap:WorkflowViewStateService.ViewState>
+                          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+                          </scg:Dictionary>
+                        </sap:WorkflowViewStateService.ViewState>
+                        <ui:LogMessage DisplayName="Log Year Folder Exists" sap:VirtualizedContainerService.HintSize="314,91" sap2010:WorkflowViewState.IdRef="LogMessage_4" Level="Info" Message="[in_Config(&quot;LogMessage_YearFolder Exists&quot;).ToString+&quot; &quot;+in_TimeStamp]" />
+                        <Assign DisplayName="Assign:CurrentYear" sap:VirtualizedContainerService.HintSize="314,60" sap2010:WorkflowViewState.IdRef="Assign_1">
+                          <Assign.To>
+                            <OutArgument x:TypeArguments="x:String">[CurrentYear]</OutArgument>
+                          </Assign.To>
+                          <Assign.Value>
+                            <InArgument x:TypeArguments="x:String">[DateTime.Now.Year.ToString]</InArgument>
+                          </Assign.Value>
+                        </Assign>
+                        <WriteLine DisplayName="Write Line" sap:VirtualizedContainerService.HintSize="314,61" sap2010:WorkflowViewState.IdRef="WriteLine_1" Text="[CurrentYear]" />
+                        <ui:PathExists DisplayName="Path Exists of Current Year" Exists="[YearFolderExists]" sap:VirtualizedContainerService.HintSize="314,89" sap2010:WorkflowViewState.IdRef="PathExists_4" Path="[in_Config(&quot;LivingstonSitePath&quot;).ToString+io_TransactionItem(0).ToString+&quot;\&quot;+CurrentYear+&quot;\&quot;]" PathType="File">
+                          <sap:WorkflowViewStateService.ViewState>
+                            <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                              <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                            </scg:Dictionary>
+                          </sap:WorkflowViewStateService.ViewState>
+                        </ui:PathExists>
+                      </Sequence>
+                      <FlowStep.Next>
+                        <FlowDecision x:Name="__ReferenceID8" sap2010:Annotation.AnnotationText="Checking if the Year Folder Exists" Condition="[YearFolderExists]" DisplayName="Year Folder Exists?" sap:VirtualizedContainerService.HintSize="147,131" sap2010:WorkflowViewState.IdRef="FlowDecision_3">
+                          <sap:WorkflowViewStateService.ViewState>
+                            <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                              <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                              <av:Point x:Key="ShapeLocation">350.5,826.5</av:Point>
+                              <av:Size x:Key="ShapeSize">147,131</av:Size>
+                              <av:PointCollection x:Key="TrueConnector">350.5,892 240,892 240,954.5</av:PointCollection>
+                              <av:PointCollection x:Key="FalseConnector">497.5,892 620,892 620,939</av:PointCollection>
+                              <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+                            </scg:Dictionary>
+                          </sap:WorkflowViewStateService.ViewState>
+                          <FlowDecision.True>
+                            <FlowStep x:Name="__ReferenceID1">
+                              <sap:WorkflowViewStateService.ViewState>
+                                <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                                  <av:Point x:Key="ShapeLocation">140,954.5</av:Point>
+                                  <av:Size x:Key="ShapeSize">200,112</av:Size>
+                                  <av:PointCollection x:Key="ConnectorLocation">240,1066.5 240,1096.5 360.5,1096.5 360.5,1066.5 455,1066.5 455,1096.5</av:PointCollection>
+                                </scg:Dictionary>
+                              </sap:WorkflowViewStateService.ViewState>
+                              <Sequence sap2010:Annotation.AnnotationText="Checking if the Current Year Summary Folder is Found" DisplayName="Create weekly summary folder" sap:VirtualizedContainerService.HintSize="200,112" sap2010:WorkflowViewState.IdRef="Sequence_5">
+                                <sap:WorkflowViewStateService.ViewState>
+                                  <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                                    <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                                    <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+                                  </scg:Dictionary>
+                                </sap:WorkflowViewStateService.ViewState>
+                                <Assign DisplayName="Assign:Out_CurrentDate" sap:VirtualizedContainerService.HintSize="314,60" sap2010:WorkflowViewState.IdRef="Assign_2">
+                                  <Assign.To>
+                                    <OutArgument x:TypeArguments="x:String">[out_CurrentDate]</OutArgument>
+                                  </Assign.To>
+                                  <Assign.Value>
+                                    <InArgument x:TypeArguments="x:String">[now.ToString("MM-dd-yy")]</InArgument>
+                                  </Assign.Value>
+                                </Assign>
+                                <WriteLine DisplayName="Write Line" sap:VirtualizedContainerService.HintSize="314,61" sap2010:WorkflowViewState.IdRef="WriteLine_2" Text="[out_CurrentDate]" />
+                                <WriteLine DisplayName="Write Line" sap:VirtualizedContainerService.HintSize="314,61" sap2010:WorkflowViewState.IdRef="WriteLine_3" Text="[in_SummaryInvoiceNo]" />
+                                <ui:PathExists DisplayName="Path Exists of Weekly Summary Folder" Exists="[WeeklySummaryFolderExists]" sap:VirtualizedContainerService.HintSize="314,89" sap2010:WorkflowViewState.IdRef="PathExists_5" Path="[in_Config(&quot;LivingstonSitePath&quot;).ToString+io_TransactionItem(0).ToString+&quot;\&quot;+CurrentYear+&quot;\&quot;+out_CurrentDate+&quot; STMT &quot;+in_SummaryInvoiceNo+&quot; Acct &quot;+io_TransactionItem(0).ToString+&quot; &quot;+io_TransactionItem(1).ToString]" PathType="File" />
+                              </Sequence>
+                              <FlowStep.Next>
+                                <FlowDecision x:Name="__ReferenceID10" sap2010:Annotation.AnnotationText="Checking if the Current Year Summary Folder Exists" Condition="[WeeklySummaryFolderExists]" DisplayName="Summary Folder?" sap:VirtualizedContainerService.HintSize="129,163" sap2010:WorkflowViewState.IdRef="FlowDecision_4">
+                                  <sap:WorkflowViewStateService.ViewState>
+                                    <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                                      <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                                      <av:Point x:Key="ShapeLocation">390.5,1096.5</av:Point>
+                                      <av:Size x:Key="ShapeSize">129,163</av:Size>
+                                      <av:PointCollection x:Key="FalseConnector">519.5,1178 680,1178 680,1219</av:PointCollection>
+                                      <av:PointCollection x:Key="TrueConnector">390.5,1178 250,1178 250,1204.5</av:PointCollection>
+                                      <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+                                    </scg:Dictionary>
+                                  </sap:WorkflowViewStateService.ViewState>
+                                  <FlowDecision.True>
+                                    <FlowStep x:Name="__ReferenceID0">
+                                      <sap:WorkflowViewStateService.ViewState>
+                                        <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                                          <av:Point x:Key="ShapeLocation">150,1204.5</av:Point>
+                                          <av:Size x:Key="ShapeSize">200,144</av:Size>
+                                        </scg:Dictionary>
+                                      </sap:WorkflowViewStateService.ViewState>
+                                      <Sequence sap2010:Annotation.AnnotationText="Checking and Creating the SubFolders of EntryDocs,Communication and Emails" DisplayName="Create SubFolders" sap:VirtualizedContainerService.HintSize="200,144" sap2010:WorkflowViewState.IdRef="Sequence_6">
+                                        <Sequence.Variables>
+                                          <Variable x:TypeArguments="ui:GenericValue" Name="Communication" />
+                                          <Variable x:TypeArguments="x:String" Name="EntryDocs" />
+                                          <Variable x:TypeArguments="ui:GenericValue" Name="Emails" />
+                                          <Variable x:TypeArguments="x:Boolean" Name="EmailFolderExists" />
+                                          <Variable x:TypeArguments="x:Boolean" Name="EntryDocsFolderExists" />
+                                          <Variable x:TypeArguments="x:Boolean" Name="CommunicationsFolderExists" />
+                                        </Sequence.Variables>
+                                        <sap:WorkflowViewStateService.ViewState>
+                                          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                                            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                                            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+                                          </scg:Dictionary>
+                                        </sap:WorkflowViewStateService.ViewState>
+                                        <Assign sap:VirtualizedContainerService.HintSize="539,60" sap2010:WorkflowViewState.IdRef="Assign_3">
+                                          <Assign.To>
+                                            <OutArgument x:TypeArguments="ui:GenericValue">[Communication]</OutArgument>
+                                          </Assign.To>
+                                          <Assign.Value>
+                                            <InArgument x:TypeArguments="ui:GenericValue">["Communication"]</InArgument>
+                                          </Assign.Value>
+                                        </Assign>
+                                        <Assign sap:VirtualizedContainerService.HintSize="539,60" sap2010:WorkflowViewState.IdRef="Assign_4">
+                                          <Assign.To>
+                                            <OutArgument x:TypeArguments="x:String">[EntryDocs]</OutArgument>
+                                          </Assign.To>
+                                          <Assign.Value>
+                                            <InArgument x:TypeArguments="x:String">Entry Docs</InArgument>
+                                          </Assign.Value>
+                                        </Assign>
+                                        <Assign sap:VirtualizedContainerService.HintSize="539,60" sap2010:WorkflowViewState.IdRef="Assign_5">
+                                          <Assign.To>
+                                            <OutArgument x:TypeArguments="ui:GenericValue">[Emails]</OutArgument>
+                                          </Assign.To>
+                                          <Assign.Value>
+                                            <InArgument x:TypeArguments="ui:GenericValue">["Emails"]</InArgument>
+                                          </Assign.Value>
+                                        </Assign>
+                                        <ui:PathExists DisplayName="Email Folder Exists" Exists="[EmailFolderExists]" sap:VirtualizedContainerService.HintSize="539,89" sap2010:WorkflowViewState.IdRef="PathExists_6" Path="[in_Config(&quot;LivingstonSitePath&quot;).ToString+io_TransactionItem(0).ToString+&quot;\&quot;+CurrentYear+&quot;\&quot;+out_CurrentDate+&quot; STMT &quot;+in_SummaryInvoiceNo+&quot; Acct &quot;+io_TransactionItem(0).ToString+&quot; &quot;+io_TransactionItem(1).ToString+&quot;\&quot;+Emails]" PathType="File" />
+                                        <ui:PathExists DisplayName="Entry Docs Path Exists" Exists="[EntryDocsFolderExists]" sap:VirtualizedContainerService.HintSize="539,89" sap2010:WorkflowViewState.IdRef="PathExists_7" Path="[in_Config(&quot;LivingstonSitePath&quot;).ToString+io_TransactionItem(0).ToString+&quot;\&quot;+CurrentYear+&quot;\&quot;+out_CurrentDate+&quot; STMT &quot;+in_SummaryInvoiceNo+&quot; Acct &quot;+io_TransactionItem(0).ToString+&quot; &quot;+io_TransactionItem(1).ToString+&quot;\&quot;+EntryDocs]" PathType="File" />
+                                        <ui:PathExists DisplayName="Communications Folder Path Exists" Exists="[CommunicationsFolderExists]" sap:VirtualizedContainerService.HintSize="539,89" sap2010:WorkflowViewState.IdRef="PathExists_8" Path="[in_Config(&quot;LivingstonSitePath&quot;).ToString+io_TransactionItem(0).ToString+&quot;\&quot;+CurrentYear+&quot;\&quot;+out_CurrentDate+&quot; STMT &quot;+in_SummaryInvoiceNo+&quot; Acct &quot;+io_TransactionItem(0).ToString+&quot; &quot;+io_TransactionItem(1).ToString+&quot;\&quot;+Communication]" PathType="File" />
+                                        <If Condition="[EmailFolderExists]" sap:VirtualizedContainerService.HintSize="539,239" sap2010:WorkflowViewState.IdRef="If_1">
+                                          <If.Then>
+                                            <ui:LogMessage DisplayName="Log Display EmailFolder Exists" sap:VirtualizedContainerService.HintSize="314,91" sap2010:WorkflowViewState.IdRef="LogMessage_6" Level="Info" Message="[in_Config(&quot;LogMessage_EmailFolder Exists&quot;).ToString]" />
+                                          </If.Then>
+                                          <If.Else>
+                                            <ui:CreateDirectory ContinueOnError="{x:Null}" DisplayName="Create Emails Folders" sap:VirtualizedContainerService.HintSize="200,22" sap2010:WorkflowViewState.IdRef="CreateDirectory_7" Path="[in_Config(&quot;LivingstonSitePath&quot;).ToString+io_TransactionItem(0).ToString+&quot;\&quot;+CurrentYear+&quot;\&quot;+out_CurrentDate+&quot; STMT &quot;+in_SummaryInvoiceNo+&quot; Acct &quot;+io_TransactionItem(0).ToString+&quot; &quot;+io_TransactionItem(1).ToString+&quot;\&quot;+Emails]" />
+                                          </If.Else>
+                                        </If>
+                                        <If Condition="[EntryDocsFolderExists]" sap:VirtualizedContainerService.HintSize="539,239" sap2010:WorkflowViewState.IdRef="If_2">
+                                          <If.Then>
+                                            <ui:LogMessage DisplayName="Log Display EntryDocs Exists" sap:VirtualizedContainerService.HintSize="314,91" sap2010:WorkflowViewState.IdRef="LogMessage_7" Level="Info" Message="[in_Config(&quot;LogMessage_EntryDocs Exists&quot;).ToString]" />
+                                          </If.Then>
+                                          <If.Else>
+                                            <ui:CreateDirectory ContinueOnError="{x:Null}" DisplayName="Create Entry Docs" sap:VirtualizedContainerService.HintSize="200,22" sap2010:WorkflowViewState.IdRef="CreateDirectory_5" Path="[in_Config(&quot;LivingstonSitePath&quot;).ToString+io_TransactionItem(0).ToString+&quot;\&quot;+CurrentYear+&quot;\&quot;+out_CurrentDate+&quot; STMT &quot;+in_SummaryInvoiceNo+&quot; Acct &quot;+io_TransactionItem(0).ToString+&quot; &quot;+io_TransactionItem(1).ToString+&quot;\&quot;+EntryDocs]" />
+                                          </If.Else>
+                                        </If>
+                                        <If Condition="[CommunicationsFolderExists]" sap:VirtualizedContainerService.HintSize="539,239" sap2010:WorkflowViewState.IdRef="If_3">
+                                          <If.Then>
+                                            <ui:LogMessage DisplayName="Log Communication Exists" sap:VirtualizedContainerService.HintSize="314,91" sap2010:WorkflowViewState.IdRef="LogMessage_8" Level="Info" Message="[in_Config(&quot;LogMessage_CommunicationFolder Exists&quot;).ToString]" />
+                                          </If.Then>
+                                          <If.Else>
+                                            <ui:CreateDirectory ContinueOnError="{x:Null}" DisplayName="Create Create Communications Folder" sap:VirtualizedContainerService.HintSize="200,22" sap2010:WorkflowViewState.IdRef="CreateDirectory_6" Path="[in_Config(&quot;LivingstonSitePath&quot;).ToString+io_TransactionItem(0).ToString+&quot;\&quot;+CurrentYear+&quot;\&quot;+out_CurrentDate+&quot; STMT &quot;+in_SummaryInvoiceNo+&quot; Acct &quot;+io_TransactionItem(0).ToString+&quot; &quot;+io_TransactionItem(1).ToString+&quot;\&quot;+Communication]" />
+                                          </If.Else>
+                                        </If>
+                                        <Sequence DisplayName="Assign reusuable folder Paths" sap:VirtualizedContainerService.HintSize="539,786" sap2010:WorkflowViewState.IdRef="Sequence_7">
+                                          <sap:WorkflowViewStateService.ViewState>
+                                            <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                                              <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                                            </scg:Dictionary>
+                                          </sap:WorkflowViewStateService.ViewState>
+                                          <Assign DisplayName="Assign Weekly Summary Folder Path" sap:VirtualizedContainerService.HintSize="242,60" sap2010:WorkflowViewState.IdRef="Assign_8">
+                                            <Assign.To>
+                                              <OutArgument x:TypeArguments="x:String">[out_WeeklySummFolderPath]</OutArgument>
+                                            </Assign.To>
+                                            <Assign.Value>
+                                              <InArgument x:TypeArguments="x:String">[in_Config("LivingstonSitePath").ToString+io_TransactionItem(0).ToString+"\"+CurrentYear+"\"+out_CurrentDate+" STMT "+in_SummaryInvoiceNo+" Acct "+io_TransactionItem(0).ToString+" "+io_TransactionItem(1).ToString]</InArgument>
+                                            </Assign.Value>
+                                          </Assign>
+                                          <Assign DisplayName="Assign Emails Folder Path" sap:VirtualizedContainerService.HintSize="242,60" sap2010:WorkflowViewState.IdRef="Assign_10">
+                                            <Assign.To>
+                                              <OutArgument x:TypeArguments="x:String">[out_EmailsFolderPath]</OutArgument>
+                                            </Assign.To>
+                                            <Assign.Value>
+                                              <InArgument x:TypeArguments="x:String">[in_Config("LivingstonSitePath").ToString+io_TransactionItem(0).ToString+"\"+CurrentYear+"\"+out_CurrentDate+" STMT "+in_SummaryInvoiceNo+" Acct "+io_TransactionItem(0).ToString+" "+io_TransactionItem(1).ToString+"\"+Emails]</InArgument>
+                                            </Assign.Value>
+                                          </Assign>
+                                          <Assign DisplayName="Assign Entry Docs Folder Path" sap:VirtualizedContainerService.HintSize="242,60" sap2010:WorkflowViewState.IdRef="Assign_7">
+                                            <Assign.To>
+                                              <OutArgument x:TypeArguments="x:String">[out_EntryDocsFolderPath]</OutArgument>
+                                            </Assign.To>
+                                            <Assign.Value>
+                                              <InArgument x:TypeArguments="x:String">[in_Config("LivingstonSitePath").ToString+io_TransactionItem(0).ToString+"\"+CurrentYear+"\"+out_CurrentDate+" STMT "+in_SummaryInvoiceNo+" Acct "+io_TransactionItem(0).ToString+" "+io_TransactionItem(1).ToString+"\"+EntryDocs]</InArgument>
+                                            </Assign.Value>
+                                          </Assign>
+                                          <Assign sap:VirtualizedContainerService.HintSize="242,60" sap2010:WorkflowViewState.IdRef="Assign_9">
+                                            <Assign.To>
+                                              <OutArgument x:TypeArguments="x:String">[out_WeeklySummFolderName]</OutArgument>
+                                            </Assign.To>
+                                            <Assign.Value>
+                                              <InArgument x:TypeArguments="x:String">[out_CurrentDate+" STMT "+in_SummaryInvoiceNo+" Acct "+io_TransactionItem(0).ToString+" "+io_TransactionItem(1).ToString]</InArgument>
+                                            </Assign.Value>
+                                          </Assign>
+                                          <WriteLine DisplayName="Write Line" sap:VirtualizedContainerService.HintSize="242,61" sap2010:WorkflowViewState.IdRef="WriteLine_4" Text="[out_WeeklySummFolderName]" />
+                                          <Assign sap:VirtualizedContainerService.HintSize="242,60" sap2010:WorkflowViewState.IdRef="Assign_11">
+                                            <Assign.To>
+                                              <OutArgument x:TypeArguments="x:String">[out_AccountFolder]</OutArgument>
+                                            </Assign.To>
+                                            <Assign.Value>
+                                              <InArgument x:TypeArguments="x:String">[in_Config("LivingstonSitePath").ToString+io_TransactionItem(0).ToString+"\"]</InArgument>
+                                            </Assign.Value>
+                                          </Assign>
+                                          <WriteLine DisplayName="Write Line" sap:VirtualizedContainerService.HintSize="242,61" sap2010:WorkflowViewState.IdRef="WriteLine_5" Text="[out_AccountFolder]" />
+                                        </Sequence>
+                                      </Sequence>
+                                    </FlowStep>
+                                  </FlowDecision.True>
+                                  <FlowDecision.False>
+                                    <FlowStep x:Name="__ReferenceID11">
+                                      <sap:WorkflowViewStateService.ViewState>
+                                        <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                                          <av:Point x:Key="ShapeLocation">580,1219</av:Point>
+                                          <av:Size x:Key="ShapeSize">200,66</av:Size>
+                                          <av:PointCollection x:Key="ConnectorLocation">680,1285 680,1306.5 380,1306.5 380,1276.5 350,1276.5</av:PointCollection>
+                                        </scg:Dictionary>
+                                      </sap:WorkflowViewStateService.ViewState>
+                                      <ui:CreateDirectory ContinueOnError="{x:Null}" sap2010:Annotation.AnnotationText="Creating a Weekly Summary Folder" DisplayName="Create Weekly Summary Folder" sap:VirtualizedContainerService.HintSize="200,66" sap2010:WorkflowViewState.IdRef="CreateDirectory_3" Path="[in_Config(&quot;LivingstonSitePath&quot;).ToString+io_TransactionItem(0).ToString+&quot;\&quot;+CurrentYear+&quot;\&quot;+out_CurrentDate+&quot; STMT &quot;+in_SummaryInvoiceNo+&quot; Acct &quot;+io_TransactionItem(0).ToString+&quot; &quot;+io_TransactionItem(1).ToString]">
+                                        <sap:WorkflowViewStateService.ViewState>
+                                          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                                            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                                            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+                                          </scg:Dictionary>
+                                        </sap:WorkflowViewStateService.ViewState>
+                                      </ui:CreateDirectory>
+                                      <FlowStep.Next>
+                                        <x:Reference>__ReferenceID0</x:Reference>
+                                      </FlowStep.Next>
+                                    </FlowStep>
+                                  </FlowDecision.False>
+                                </FlowDecision>
+                              </FlowStep.Next>
+                            </FlowStep>
+                          </FlowDecision.True>
+                          <FlowDecision.False>
+                            <FlowStep x:Name="__ReferenceID9">
+                              <sap:WorkflowViewStateService.ViewState>
+                                <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                                  <av:Point x:Key="ShapeLocation">520,939</av:Point>
+                                  <av:Size x:Key="ShapeSize">200,66</av:Size>
+                                  <av:PointCollection x:Key="ConnectorLocation">620,1005 620,1010.5 340,1010.5</av:PointCollection>
+                                </scg:Dictionary>
+                              </sap:WorkflowViewStateService.ViewState>
+                              <ui:CreateDirectory ContinueOnError="{x:Null}" sap2010:Annotation.AnnotationText="Creating an Current Year&#xA;Folder " DisplayName="Create Year Folder" sap:VirtualizedContainerService.HintSize="200,66" sap2010:WorkflowViewState.IdRef="CreateDirectory_2" Path="[in_Config(&quot;LivingstonSitePath&quot;).ToString+io_TransactionItem(0).ToString+&quot;\&quot;+CurrentYear+&quot;\&quot;]">
+                                <sap:WorkflowViewStateService.ViewState>
+                                  <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                                    <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                                    <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+                                  </scg:Dictionary>
+                                </sap:WorkflowViewStateService.ViewState>
+                              </ui:CreateDirectory>
+                              <FlowStep.Next>
+                                <x:Reference>__ReferenceID1</x:Reference>
+                              </FlowStep.Next>
+                            </FlowStep>
+                          </FlowDecision.False>
+                        </FlowDecision>
+                      </FlowStep.Next>
+                    </FlowStep>
+                  </FlowDecision.True>
+                  <FlowDecision.False>
+                    <FlowStep x:Name="__ReferenceID6">
+                      <sap:WorkflowViewStateService.ViewState>
+                        <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                          <av:Point x:Key="ShapeLocation">470,689</av:Point>
+                          <av:Size x:Key="ShapeSize">200,66</av:Size>
+                          <av:PointCollection x:Key="ConnectorLocation">570,755 570,770.02 300,770.02 300,740.02 270,740.02</av:PointCollection>
+                        </scg:Dictionary>
+                      </sap:WorkflowViewStateService.ViewState>
+                      <ui:CreateDirectory ContinueOnError="{x:Null}" sap2010:Annotation.AnnotationText="Creating an Account Number Folder" DisplayName="Create Account No Directory" sap:VirtualizedContainerService.HintSize="200,66" sap2010:WorkflowViewState.IdRef="CreateDirectory_1" Path="[in_Config(&quot;LivingstonSitePath&quot;).ToString+io_TransactionItem(0).ToString+&quot;\&quot;]">
+                        <sap:WorkflowViewStateService.ViewState>
+                          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+                          </scg:Dictionary>
+                        </sap:WorkflowViewStateService.ViewState>
+                      </ui:CreateDirectory>
+                      <FlowStep.Next>
+                        <x:Reference>__ReferenceID2</x:Reference>
+                      </FlowStep.Next>
+                    </FlowStep>
+                  </FlowDecision.False>
+                </FlowDecision>
+              </FlowStep.Next>
+            </FlowStep>
+          </FlowDecision.True>
+          <FlowDecision.False>
+            <FlowStep x:Name="__ReferenceID7">
+              <sap:WorkflowViewStateService.ViewState>
+                <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                  <av:Point x:Key="ShapeLocation">850,354.5</av:Point>
+                  <av:Size x:Key="ShapeSize">200,128</av:Size>
+                </scg:Dictionary>
+              </sap:WorkflowViewStateService.ViewState>
+              <Sequence sap2010:Annotation.AnnotationText="Throwing an Exception when the Livingston Root Folder is not accessible " DisplayName="Log and throw" sap:VirtualizedContainerService.HintSize="200,128" sap2010:WorkflowViewState.IdRef="Sequence_4">
+                <sap:WorkflowViewStateService.ViewState>
+                  <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                    <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                    <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+                  </scg:Dictionary>
+                </sap:WorkflowViewStateService.ViewState>
+                <ui:LogMessage DisplayName="Log Livingston Site Not Accessible" sap:VirtualizedContainerService.HintSize="200,52" sap2010:WorkflowViewState.IdRef="LogMessage_5" Level="Info" Message="[in_Config(&quot;LogMessage_LivingstonSite Not Accessible&quot;).ToString+&quot; &quot;+in_TimeStamp]">
+                  <sap:WorkflowViewStateService.ViewState>
+                    <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                      <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+                      <x:Boolean x:Key="IsPinned">False</x:Boolean>
+                    </scg:Dictionary>
+                  </sap:WorkflowViewStateService.ViewState>
+                </ui:LogMessage>
+                <Throw Exception="[new Exception(&quot;Livingston Root folder not accessible&quot;)]" sap:VirtualizedContainerService.HintSize="200,22" sap2010:WorkflowViewState.IdRef="Throw_1" />
+              </Sequence>
+            </FlowStep>
+          </FlowDecision.False>
+        </FlowDecision>
+      </FlowStep.Next>
+    </FlowStep>
+    <x:Reference>__ReferenceID3</x:Reference>
+    <x:Reference>__ReferenceID4</x:Reference>
+    <x:Reference>__ReferenceID5</x:Reference>
+    <x:Reference>__ReferenceID2</x:Reference>
+    <x:Reference>__ReferenceID6</x:Reference>
+    <x:Reference>__ReferenceID7</x:Reference>
+    <x:Reference>__ReferenceID8</x:Reference>
+    <x:Reference>__ReferenceID1</x:Reference>
+    <x:Reference>__ReferenceID9</x:Reference>
+    <x:Reference>__ReferenceID10</x:Reference>
+    <x:Reference>__ReferenceID11</x:Reference>
+    <x:Reference>__ReferenceID0</x:Reference>
+  </Flowchart>
+</Activity>

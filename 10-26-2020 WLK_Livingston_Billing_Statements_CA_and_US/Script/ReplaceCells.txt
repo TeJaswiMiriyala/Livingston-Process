@@ -1,0 +1,63 @@
+Private Sub ReplaceEmptyCells(StatusValue As String)
+
+MsgBox StatusValue
+
+Dim Sheet1_LastRow, Sheet1_LastCol, Col_Index, Row_Index As Long
+Dim Status_Index, Status_Column_Index, Slash_Index, String_Length, String_Comp_Index, Term_by_Col_Loc As Integer
+
+Dim PO_Status, Final_String, Column_Name, Status As String
+
+Status_Column_Index = 25
+ThisWorkbook.Worksheets(1).Activate
+
+Sheet1_LastRow = ActiveCell.SpecialCells(xlCellTypeLastCell).Row
+Sheet1_LastCol = ActiveCell.SpecialCells(xlCellTypeLastCell).Column
+
+
+'**************************************************************************
+'* Finds Column Index of "Status" Column
+'**************************************************************************
+
+ThisWorkbook.Worksheets(1).Activate
+Col_Index = 1
+
+While (Col_Index <= Sheet1_LastCol)
+Column_Name = Cells(1, Col_Index)
+
+If (Column_Name <> Empty) Then
+
+String_Comp_Index = InStr(1, Column_Name, "Weekly Excel Attachment?" , vbTextCompare)
+
+If String_Comp_Index > 0 Then
+
+Term_by_Col_Loc = Col_Index
+Col_Index = Sheet1_LastCol
+End If
+
+End If
+Col_Index = Col_Index + 1
+Wend
+
+MsgBox Term_by_Col_Loc
+MsgBox Sheet1_LastRow
+MsgBox Term_by_Col_Loc
+'**************************************************************************
+'* Replace Empty Cell with "Not Matched" in "Status" Column
+'**************************************************************************
+
+ThisWorkbook.Worksheets(1).Activate
+Row_Index = 2
+
+While (Row_Index <= Sheet1_LastRow)
+Status = Cells(Row_Index, Term_by_Col_Loc)
+
+If (Status <> Empty) Then
+
+Else
+    Cells(Row_Index, Term_by_Col_Loc) = StatusValue
+End If
+Row_Index = Row_Index + 1
+Wend
+End Sub
+
+

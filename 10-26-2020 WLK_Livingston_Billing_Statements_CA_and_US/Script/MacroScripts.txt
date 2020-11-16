@@ -1,0 +1,6 @@
+Sub RenameSheet(SheetName As String,DateFormat As String)
+
+Sheets(SheetName).Activate
+ActiveSheet.Name = DateFormat
+
+End Sub
